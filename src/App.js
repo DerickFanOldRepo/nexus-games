@@ -1,26 +1,38 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
+import WelcomeScreen from './components/WelcomeScreen/WelcomeScreen';
+import GameSelection from './components/GameSelection/GameSelection';
+import { socket } from "./lib/socket";
+import TicTacToe from './components/TicTacToe/TicTacToe';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const App = () => {
+    const [ playerName, setPlayerName ] = useState();
+    const [ gameName, setGameName ] = useState(); 
+
+    useEffect(() => {
+
+        socket.on('roomJoinFailed', (error) => {
+            console.log(error);
+        });
+
+        socket.on('setGame', gameName => {
+            setGameName(gameName);
+        });
+
+    }, []);
+
+    const renderSelectedGame = () => {
+        switch (gameName) {
+            case 'tictactoe':
+                return <TicTacToe />
+        }
+    }
+
+    return (
+        gameName ? renderSelectedGame()
+        : playerName ? <GameSelection />
+            :<WelcomeScreen setPlayerName={setPlayerName} />
+    )
+};
 
 export default App;

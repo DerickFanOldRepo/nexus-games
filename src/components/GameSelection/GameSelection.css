@@ -1,0 +1,16 @@
+/* .game-selection {
+    display: grid;
+    width: 70vw;
+    height: 100vh;
+    grid-template-columns: 25% 25% 25% 25%;
+    text-align: center;
+    grid-template-rows: 50% 50% 50%; 
+    column-gap: 10px;
+    row-gap: 15px;
+} */
+
+.game-selection {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}

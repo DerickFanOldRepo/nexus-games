@@ -114,7 +114,14 @@ const Cell = (props) => {
     }
 
     return (
-        <td onClick={playerMove}>{props.cell}</td>
+        <td onClick={playerMove}>
+            {
+                props.cell === 'X' 
+                ? <i class="fas fa-times fa-6x"></i>
+                : props.cell === 'O' ? <i class="far fa-circle fa-6x"></i>
+                : <div></div>
+            }
+        </td>
     );
 
 }

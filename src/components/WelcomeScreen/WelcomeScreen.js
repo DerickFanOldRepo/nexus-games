@@ -7,8 +7,8 @@ const WelcomeScreen = (props) => {
     const [ playerName, setPLayerName ] = useState('');
 
     const enterUser = () => {
-        props.setPlayerName(playerName);
-        if (playerName.length > 0) {
+        if (playerName.trim().length > 0) {
+            props.setPlayerName(playerName);
             socket.emit('setPlayerName', playerName);
         }
     }
@@ -16,7 +16,10 @@ const WelcomeScreen = (props) => {
     return (
         <div className='welcome-screen'>
             <h1>Nexus Games</h1>
-            <input type='text' placeholder='name' onChange={e => setPLayerName(e.target.value)}></input>
+            <input type='text' 
+                placeholder='name'
+                onChange={e => setPLayerName(e.target.value)}
+                maxLength={15} />
             <button onClick={enterUser}>Enter</button>
         </div>
     )

@@ -31,24 +31,24 @@ const GameCard = (props) => {
     return (
         <div className="game-card">
             <h1>{props.gameName}</h1>
+            {joinError ? (
+                <p className="error-text">{joinError}</p>
+            ) : (
+                <div></div>
+            )}
+            {roomNumber !== undefined ? (
+                <input
+                    type="text"
+                    placeholder="code"
+                    onChange={(e) => setRoomNumber(e.target.value)}
+                    minLength={0}
+                    maxLength={3}
+                ></input>
+            ) : (
+                <div></div>
+            )}
             <div className="menu-buttons">
                 <button onClick={createRoom}>Create</button>
-                {joinError ? (
-                    <p className="error-text">{joinError}</p>
-                ) : (
-                    <div></div>
-                )}
-                {roomNumber !== undefined ? (
-                    <input
-                        type="text"
-                        placeholder="code"
-                        onChange={(e) => setRoomNumber(e.target.value)}
-                        minLength={0}
-                        maxLength={3}
-                    ></input>
-                ) : (
-                    <div></div>
-                )}
                 <button onClick={joinRoom}>Join</button>
             </div>
         </div>

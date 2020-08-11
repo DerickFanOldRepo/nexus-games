@@ -2,10 +2,23 @@
     width: 15vw;
     min-width: 15em;
     outline: 1px solid;
+    height: 50vh;
+    text-align: center;
+}
+
+.user-display button {
+    justify-self: flex-end;
+    align-self: flex-end;
 }
 
 @media only screen and (max-width: 700px) {
     .user-display {
+        min-width: 100vw;
+        height: auto;
+        /* order: 2; */
+    }
+
+    .user-container {
         display: none;
     }
 }

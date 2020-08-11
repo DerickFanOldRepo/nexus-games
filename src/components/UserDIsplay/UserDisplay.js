@@ -19,9 +19,11 @@ const UserDisplay = (props) => {
     return (
         <div className='user-display'>
             <h1>{props.gameName} - {props.roomNumber}</h1>
-            {
-                users.map(name => <h1>{name}</h1>)
-            }
+            <div className='user-container'>
+                {
+                    users.map(name => <h1>{name}</h1>)
+                }
+            </div>
             <button onClick={leaveRoom}>Leave Room</button>
         </div>
     );

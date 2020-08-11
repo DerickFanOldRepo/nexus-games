@@ -3,6 +3,7 @@ import UserDisplay from '../UserDIsplay/UserDisplay';
 import ChatDisplay from '../ChatDisplay/ChatDisplay';
 import { socket } from '../../lib/socket';
 import './TicTacToe.css';
+import ErrorMessage from '../ErrorMessage/ErrorMessage';
 
 const TicTacToe = (props) => {
 
@@ -60,19 +61,12 @@ const TicTacToe = (props) => {
                             ? <button onClick={startGame}>New Game</button>
                             : <div></div>
                         }
-                        {   
-                            gameError ? <p className='error-text'>{gameError}</p>
-                            : <div></div>
-                        }
                     </Fragment>
-                    : roomMaster ? <Fragment>
-                        {   
-                            gameError ? <p className='error-text'>{gameError}</p>
-                            : <div></div>
-                        }
-                        <button onClick={startGame}>Start Game</button>
-                    </Fragment>
+                    : roomMaster ? <button onClick={startGame}>Start Game</button>
                     : <h1>Waiting...</h1>
+                }
+                {
+                    gameError ? <ErrorMessage error={gameError} setError={setGameError}/> : <div /> 
                 }
             </div>
             <ChatDisplay />

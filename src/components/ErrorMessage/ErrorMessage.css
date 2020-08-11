@@ -1,0 +1,22 @@
+.error-message {
+    display: flex;
+    /* flex-direction: column; */
+    justify-content: center;
+    align-content: center;
+    outline: 1px solid;
+    bottom: 10em;
+    z-index: 4;
+    text-align: center;
+    width: 14em;
+    background-color: white;
+    position: fixed;
+    padding: 0.5em;
+}
+
+.error-text {
+    color: red;
+}
+
+.error-message button {
+    width: 6em;
+}

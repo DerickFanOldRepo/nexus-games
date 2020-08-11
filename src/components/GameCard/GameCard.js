@@ -4,15 +4,6 @@ import "./GameCard.css";
 
 const GameCard = (props) => {
     const [roomNumber, setRoomNumber] = useState();
-    const [joinError, setJoinError] = useState();
-
-    useEffect(() => {
-        socket.on("roomJoinFailed", (game, error) => {
-            if (game === props.gameName.toLowerCase()) {
-                setJoinError(error);
-            }
-        });
-    }, []);
 
     const createRoom = () => {
         socket.emit("joinGame", props.gameName);
@@ -20,7 +11,7 @@ const GameCard = (props) => {
     };
 
     const joinRoom = () => {
-        if (roomNumber !== undefined) {
+        if (roomNumber) {
             socket.emit("joinGame", props.gameName);
             socket.emit("joinRoom", roomNumber);
         } else {
@@ -31,11 +22,6 @@ const GameCard = (props) => {
     return (
         <div className="game-card">
             <h1>{props.gameName}</h1>
-            {joinError ? (
-                <p className="error-text">{joinError}</p>
-            ) : (
-                <div></div>
-            )}
             {roomNumber !== undefined ? (
                 <input
                     type="text"

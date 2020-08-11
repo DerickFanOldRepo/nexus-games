@@ -16,10 +16,6 @@ body {
     height: 100vh;
 }
 
-.error-text {
-    color: red;
-}
-
 button {
     text-transform: uppercase;
     outline: none;

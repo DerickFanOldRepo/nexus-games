@@ -38,10 +38,6 @@
     background: white;
 }
 
-.game-card .error-text {
-    position: absolute;
-}
-
 .menu-buttons button { 
     border: 1px solid;
     /* margin: 0.5em; */

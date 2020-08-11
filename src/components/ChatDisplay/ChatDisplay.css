@@ -6,13 +6,13 @@
 }
 
 .chat-display input {
+    display: block;
     width: 100%;
     margin: 0;
     padding: 0;
-    background: white;
-    font-size: 1.2em;
-    /* border: none; */
+    font-size: 1.4em;
     outline: none;
+    border: none;
 }
 
 
@@ -27,6 +27,7 @@
     line-height: 0em;
     font-size: 1.2em;
     padding: 0%;
+    padding-left: 0.5em;
     margin: 0.9em 0;
     text-decoration: none;
 }

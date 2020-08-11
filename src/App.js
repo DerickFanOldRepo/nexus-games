@@ -11,10 +11,6 @@ const App = () => {
 
     useEffect(() => {
 
-        socket.on('roomJoinFailed', (error) => {
-            console.log(error);
-        });
-
         socket.on('setGame', gameName => {
             setGameName(gameName);
         });

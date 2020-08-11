@@ -3,5 +3,8 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-export const socket = io();
+
+const URL = process.env.REACT_APP_URL || '';
+
+export const socket = io(URL);
 

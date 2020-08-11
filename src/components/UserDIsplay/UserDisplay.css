@@ -1,7 +1,7 @@
 .user-display {
     width: 15vw;
     min-width: 15em;
-    outline: 1px solid;
+    /* outline: 1px solid; */
     height: 50vh;
     text-align: center;
 }

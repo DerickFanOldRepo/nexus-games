@@ -1,6 +1,17 @@
 const rooms = {};
 
 const Tictactoe = (socket, io) => {
+
+    const updateClient = () => {
+        const room = rooms[socket['roomCode']];
+
+        socket.emit('setGame', 'tictactoe');
+        socket.emit('roomJoined', room['roomNumber']);
+        io.to(socket['roomCode']).emit('updateUsers', Object.values(room['users']))
+        socket.emit('updateChatHistory', room['chatHistory']);
+
+    }
+
     const createRoom = () => {
         const roomNumber = generateRoomNumber();
         const roomCode = `tictactoe${roomNumber}`;
@@ -11,13 +22,12 @@ const Tictactoe = (socket, io) => {
             roomMaster: socket.id,
             playerTurn: 0,
             chatHistory: [],
+            roomNumber: roomNumber
         };
         rooms[roomCode]['users'][socket.id] = socket['name'];
-        socket.emit('setGame', 'tictactoe');
-        socket.emit('roomJoined', roomNumber);
-        socket.emit('updateUsers', Object.values(rooms[roomCode]['users']));
+
+        updateClient();
         socket.emit('setRoomMaster')
-        socket.emit('updateChatHistory', rooms[roomCode]['chatHistory']);
     };
     
     const joinRoom = (roomNumber) => {
@@ -33,10 +43,7 @@ const Tictactoe = (socket, io) => {
             socket.join(roomCode);
             socket['roomCode'] = roomCode;
             room['users'][socket.id] = socket['name'];
-            socket.emit('setGame', 'tictactoe');
-            socket.emit('roomJoined', roomNumber);
-            io.in(roomCode).emit('updateUsers', Object.values(room['users']));
-            socket.emit('updateChatHistory', rooms[roomCode]['chatHistory']);
+            updateClient();
         }
     };
     
@@ -87,17 +94,14 @@ const Tictactoe = (socket, io) => {
         } else if (room['grid'][row][col] !== ''){
             socket.emit('gameError', 'Tile already taken');
         } else {
-            if (room['playerTurn'] === 0) {
-                room['grid'][row][col] = 'X';
-            } else {
-                room['grid'][row][col] = 'O';
-            }
+            room['playerTurn'] === 0 ? room['grid'][row][col] = 'X' : room['grid'][row][col] = 'O';
+            
             if (checkWin(room['grid'], row, col)) {
                 io.to(socket['roomCode']).emit('gameEnd', `${socket['name']} wins`);
             } else if (room['turn'] === 8) {
                 io.to(socket['roomCode']).emit('gameEnd', `It's a tie`);
             } else {
-                room['turn'] += 1;
+                room['turn']++;
                 io.to(Object.keys(room['users'])[room['playerTurn']]).emit('userTurn', false);
                 room['playerTurn'] ^= 1; 
                 io.to(Object.keys(room['users'])[room['playerTurn']]).emit('userTurn', true);

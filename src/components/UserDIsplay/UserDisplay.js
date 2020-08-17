@@ -5,12 +5,19 @@ import './UserDisplay.css';
 const UserDisplay = (props) => {
 
     const [ users, setUsers ] = useState([]);
+    
+    // When this component unmounts the socket will stop listening
+    useEffect(() => {
+        socket.removeAllListeners('updateUsers');
+    }, []);
 
     useEffect(() => {
         socket.on('updateUsers', users => {
             setUsers(users);
         });
-    }, []);
+    }, [users]);
+
+    
 
     const leaveRoom = () => {
         socket.emit("leaveRoom");

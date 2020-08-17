@@ -5,14 +5,18 @@ import "./ChatDisplay.css";
 
 const ChatDisplay = () => {
     const [chatHistory, setChatHistory] = useState([]);
-    const [message, setMessage] = useState();
+    const [message, setMessage] = useState('');
 
+    useEffect(() => {
+        socket.removeAllListeners('updateChatHistory');
+    }, []);
+    
     useEffect(() => {
         socket.on("updateChatHistory", (chatHistory) => {
             setChatHistory(chatHistory);
             scrollToBottom();
         });
-    }, []);
+    }, [chatHistory]);
 
     const sendMessage = () => {
         socket.emit("sendMessage", message);

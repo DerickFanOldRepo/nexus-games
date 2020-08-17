@@ -8,7 +8,6 @@ import "./App.css";
 import UserDisplay from "./components/UserDIsplay/UserDisplay";
 import ChatDisplay from "./components/ChatDisplay/ChatDisplay";
 import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
-import Lobby from "./components/Lobby/Lobby";
 
 const App = () => {
     const [playerName, setPlayerName] = useState();

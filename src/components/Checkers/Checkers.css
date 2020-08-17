@@ -1,0 +1,48 @@
+.game-display {
+    /* background-color: grey; */
+}
+
+.board {
+    display: grid;
+    grid-template-columns: 50px 50px 50px 50px 50px 50px 50px 50px;
+    width: 400px;
+}
+
+.cell {
+    display: flex;
+    width: 50px;
+    height: 50px;
+    outline: 1px solid white;
+    justify-content: center;
+    align-items: center;
+}
+
+.red {
+    background-color: red
+}
+
+.black {
+    background-color: black
+}
+
+.circle-black {
+    display: block;
+    width: 75%;
+    height: 75%;
+    background-color: red;
+    border: 1px solid white;
+    border-radius: 50%;
+}
+
+.highlight {
+    background-color: yellow;
+}
+
+.circle-red {
+    display: block;
+    width: 75%;
+    height: 75%;
+    background-color: black;
+    border: 1px solid white;
+    border-radius: 50%;
+}

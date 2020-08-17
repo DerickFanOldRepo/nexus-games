@@ -1,5 +1,6 @@
 const Tictactoe = require("./tictactoe");
 const Chess = require("./chess");
+const Checkers = require("./checkers");
 // const cli = require('./cli');
 
 // Inits all the sockets and is exported
@@ -20,8 +21,8 @@ const sockets = (io) => {
                     case "tictactoe":
                         Tictactoe(socket, io);
                         break;
-                    case "chess":
-                        Chess(socket, io);
+                    case "checkers":
+                        Checkers(socket, io);
                         break;
                 }
             }

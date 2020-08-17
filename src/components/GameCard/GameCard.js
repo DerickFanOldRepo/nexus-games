@@ -14,9 +14,8 @@ const GameCard = (props) => {
         if (roomNumber) {
             socket.emit("joinGame", props.gameName);
             socket.emit("joinRoom", roomNumber);
-        } else {
-            setRoomNumber("");
         }
+        setRoomNumber("");
     };
 
     return (
@@ -29,7 +28,8 @@ const GameCard = (props) => {
                     onChange={(e) => setRoomNumber(e.target.value)}
                     minLength={0}
                     maxLength={3}
-                ></input>
+                    value={roomNumber}
+                />
             ) : (
                 <div></div>
             )}

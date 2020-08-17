@@ -36,10 +36,12 @@ const Tictactoe = (socket, io) => {
         const room = rooms[roomCode];
         // Checks if the room exists
         if (!room) {
-            socket.emit("roomJoinFailed", "tictactoe", "Room does not exist");
+            socket.emit("gameError", "Room does not exist");
+            unbind();
             // Checks if the room is full
         } else if (Object.keys(room["users"]).length >= 2) {
-            socket.emit("roomJoinFailed", "tictactoe", "Room is full");
+            socket.emit("gameError", "Room is full");
+            unbind();
         } else {
             socket.join(roomCode);
             socket["roomCode"] = roomCode;
@@ -132,10 +134,6 @@ const Tictactoe = (socket, io) => {
         }
     };
 
-    const printMessage = (message) => {
-        console.log(message);
-    };
-
     const sendMessage = (message) => {
         const room = rooms[socket["roomCode"]];
         const messageObj = {
@@ -149,65 +147,59 @@ const Tictactoe = (socket, io) => {
         );
     };
 
-    const checkWin = (grid, row, col) => {
-        // Checks a win on the row
-        if (grid[row][0] === grid[row][1] && grid[row][1] === grid[row][2])
-            return true;
-        // Checks a win on the col
-        if (grid[0][col] === grid[1][col] && grid[1][col] === grid[2][col])
-            return true;
-        // Checks for a diagonal win
-        if (row === col) {
-            if (grid[0][0] === grid[1][1] && grid[1][1] === grid[2][2])
-                return true;
-        }
-        // Checks for a diagonal win
-        if (row + col === 2) {
-            if (grid[2][0] === grid[1][1] && grid[1][1] === grid[0][2])
-                return true;
-        }
-        return false;
-    };
-
     const bind = () => {
         // Binds the functions to their corresponding events
         socket.on("createRoom", createRoom);
         socket.on("joinRoom", joinRoom);
-        socket.on("message", printMessage);
         socket.on("startGame", startGame);
         socket.on("leaveRoom", leaveRoom);
         socket.on("playerMove", playerMove);
         socket.on("disconnect", leaveRoom);
         socket.on("sendMessage", sendMessage);
     };
-
+    
     const unbind = () => {
         // Socket leaves the room
         socket.leave(socket["roomCode"]);
         // Removes the roomCode stored in the socket
         delete socket["roomCode"];
-
+        
         // Unbinds the functions to their corresponding events
         socket.off("createRoom", createRoom);
         socket.off("joinRoom", joinRoom);
-        socket.off("message", printMessage);
         socket.off("startGame", startGame);
         socket.off("leaveRoom", leaveRoom);
         socket.off("playerMove", playerMove);
         socket.off("disconnect", leaveRoom);
         socket.off("sendMessage", sendMessage);
     };
-
+    
     bind();
+    
 };
 
 const generateRoomNumber = () => {
     return Math.floor(Math.random() * 100);
 };
 
-const printRooms = () => {
-    console.log(rooms);
+const checkWin = (grid, row, col) => {
+    // Checks a win on the row
+    if (grid[row][0] === grid[row][1] && grid[row][1] === grid[row][2])
+        return true;
+    // Checks a win on the col
+    if (grid[0][col] === grid[1][col] && grid[1][col] === grid[2][col])
+        return true;
+    // Checks for a diagonal win
+    if (row === col) {
+        if (grid[0][0] === grid[1][1] && grid[1][1] === grid[2][2])
+            return true;
+    }
+    // Checks for a diagonal win
+    if (row + col === 2) {
+        if (grid[2][0] === grid[1][1] && grid[1][1] === grid[0][2])
+            return true;
+    }
+    return false;
 };
 
 module.exports = Tictactoe;
-module.exports.printRooms = printRooms;

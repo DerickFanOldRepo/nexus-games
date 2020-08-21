@@ -35,7 +35,7 @@ const sockets = (io) => {
                         Checkers(socket, io, room);
                         break;
                     case "pictionary":
-                        Pictionary(socket, i, room);
+                        Pictionary(socket, io, room);
                         break;
                 }
                 socket.emit("setGame", gameName.toLowerCase());

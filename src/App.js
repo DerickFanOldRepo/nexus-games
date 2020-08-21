@@ -1,13 +1,14 @@
 import React, { useState, useEffect, Fragment } from "react";
 import WelcomeScreen from "./components/WelcomeScreen/WelcomeScreen";
 import GameSelection from "./components/GameSelection/GameSelection";
-import { socket } from "./lib/socket";
 import TicTacToe from "./components/TicTacToe/TicTacToe";
 import Checkers from "./components/Checkers/Checkers";
-import "./App.css";
 import UserDisplay from "./components/UserDIsplay/UserDisplay";
 import ChatDisplay from "./components/ChatDisplay/ChatDisplay";
 import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
+import Pictionary from "./components/Pictionary/Pictionary";
+import { socket } from "./lib/socket";
+import "./App.css";
 
 const App = () => {
     const [playerName, setPlayerName] = useState();
@@ -23,6 +24,7 @@ const App = () => {
         socket.on("setRoomMaster", () => setRoomMaster(true));
         socket.on("gameError", (error) => {
             setGameError(error);
+            // Resets gameError
             setTimeout(() => setGameError(), 1000);
         });
     }, []);
@@ -33,18 +35,20 @@ const App = () => {
                 return <TicTacToe roomMaster={roomMaster} />;
             case "checkers":
                 return <Checkers roomMaster={roomMaster} />;
+            case "pictionary":
+                return <Pictionary roomMaster={roomMaster} />
         }
     };
 
     const displayError = () => {
-        return gameError ? <ErrorMessage error={gameError} /> : <div />;
+        if (gameError) return <ErrorMessage error={gameError} />;
     };
 
     return (
         <Fragment>
             {gameName ? (
                 <div className="room">
-                    <UserDisplay gameName={gameName} roomNumber={roomNumber} />
+                    <UserDisplay gameName={gameName} roomNumber={roomNumber} setRoomMaster={setRoomMaster} />
                     {renderSelectedGame()}
                     <ChatDisplay />
                 </div>

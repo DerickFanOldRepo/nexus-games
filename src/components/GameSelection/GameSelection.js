@@ -6,7 +6,6 @@ import "./GameSelection.css";
 const GameSelection = (props) => {
     const [games, setGames] = useState([
         "TicTacToe",
-        "Chess",
         "Checkers",
         "Pictionary",
     ]);

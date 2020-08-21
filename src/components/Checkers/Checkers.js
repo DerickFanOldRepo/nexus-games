@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import './Checkers.css';
 import { socket } from "../../lib/socket";
 
@@ -23,7 +23,7 @@ const Checkers = (props) => {
 
         });
         socket.on("userTurn", (turn) => {
-
+            setPlayerTurn(turn);
         });
         socket.on("gameEnd", (status) => {
 
@@ -37,7 +37,12 @@ const Checkers = (props) => {
     return (
         <div className='game-display'>
             {grid ? (
-                <Board grid={grid}/>
+                <Fragment>
+                    {
+                        playerTurn ? <h1>Your Turn</h1> : <h1>Not Your Turn</h1>
+                    }
+                    <Board grid={grid}/>
+                </Fragment>
             ) : props.roomMaster ? (
                     <button onClick={startGame}>Start Game</button>
             ) : (
@@ -70,12 +75,12 @@ const displayBoard = (grid) => {
 const Cell = (props) => {
 
     const row = Math.floor(props.index / 8) % 2; 
-    const color = row === 0 && props.index % 2 == 0 || row === 1 && props.index % 2 == 1 ? "red" : "black";
+    const color = row === props.index % 2 ? "red" : "black";
 
     const handleClick = () => {
         console.log(props.index);
     }
-
+    
     return (
         <span onClick={handleClick} className={`cell ${color}`}>
             {
@@ -87,7 +92,5 @@ const Cell = (props) => {
     )
 
 } 
-
-
 
 export default Checkers;

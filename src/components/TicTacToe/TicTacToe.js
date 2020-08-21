@@ -5,7 +5,6 @@ import "./TicTacToe.css";
 const TicTacToe = (props) => {
     const [grid, setGrid] = useState();
     const [playerTurn, setPlayerTurn] = useState();
-    
     const [gameStatus, setGameStatus] = useState();
 
     useEffect(() => {

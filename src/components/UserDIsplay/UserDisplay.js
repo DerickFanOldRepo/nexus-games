@@ -20,6 +20,7 @@ const UserDisplay = (props) => {
     
 
     const leaveRoom = () => {
+        props.setRoomMaster(false);
         socket.emit("leaveRoom");
     }
 

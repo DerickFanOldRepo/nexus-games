@@ -1,84 +1,9 @@
-const rooms = {};
 
-const Tictactoe = (socket, io) => {
-    const updateClient = () => {
-        const room = rooms[socket["roomCode"]];
 
-        socket.emit("setGame", "tictactoe");
-        socket.emit("roomJoined", room["roomNumber"]);
-        io.to(socket["roomCode"]).emit(
-            "updateUsers",
-            Object.values(room["users"])
-        );
-        socket.emit("updateChatHistory", room["chatHistory"]);
-    };
-
-    const createRoom = () => {
-        const roomNumber = generateRoomNumber();
-        const roomCode = `tictactoe${roomNumber}`;
-        socket["roomCode"] = roomCode;
-        socket.join(roomCode);
-        rooms[roomCode] = {
-            users: {},
-            roomMaster: socket.id,
-            playerTurn: 0,
-            chatHistory: [],
-            roomNumber: roomNumber,
-        };
-        rooms[roomCode]["users"][socket.id] = socket["name"];
-
-        updateClient();
-        socket.emit("setRoomMaster");
-    };
-
-    const joinRoom = (roomNumber) => {
-        const roomCode = `tictactoe${roomNumber}`;
-        const room = rooms[roomCode];
-        // Checks if the room exists
-        if (!room) {
-            socket.emit("gameError", "Room does not exist");
-            unbind();
-            // Checks if the room is full
-        } else if (Object.keys(room["users"]).length >= 2) {
-            socket.emit("gameError", "Room is full");
-            unbind();
-        } else {
-            socket.join(roomCode);
-            socket["roomCode"] = roomCode;
-            room["users"][socket.id] = socket["name"];
-            updateClient();
-        }
-    };
-
-    const leaveRoom = () => {
-        const room = rooms[socket["roomCode"]];
-        if (room) {
-            delete room["users"][socket.id];
-
-            // Checks if the user leaving is the only user
-            if (Object.values(room["users"]).length === 0) {
-                delete rooms[socket["roomCode"]];
-                // Checks if the user leaving is the current roomMaster
-            } else if (room["roomMaster"] === socket.id) {
-                room["roomMaster"] = Object.keys(room["users"])[0];
-                io.to(room["roomMaster"]).emit("setRoomMaster");
-            }
-            // Updates the rest of the users that a user has left
-            io.in(socket["roomCode"]).emit(
-                "updateUsers",
-                Object.values(room["users"])
-            );
-
-            // Unbinds all the events on this socket
-            unbind();
-
-            // Notifies the socket they have left the game
-            socket.emit("setGame", null);
-        }
-    };
+const Tictactoe = (socket, io, room) => {
 
     const startGame = () => {
-        const room = rooms[socket["roomCode"]];
+        // const room = rooms[socket["roomCode"]];
         // Checks if there are enough players to start
         if (Object.keys(room["users"]).length < 2) {
             socket.emit("gameError", "Not Enough People");
@@ -89,6 +14,7 @@ const Tictactoe = (socket, io) => {
                 ["", "", ""],
                 ["", "", ""],
             ];
+            room["playerTurn"] = 0;
             room["gameStatus"] = 0;
             room["turn"] = 0;
             io.to(socket["roomCode"]).emit("startGame", room["grid"]);
@@ -100,7 +26,7 @@ const Tictactoe = (socket, io) => {
     };
 
     const playerMove = (row, col) => {
-        const room = rooms[socket["roomCode"]];
+        // const room = rooms[socket["roomCode"]];
         const players = Object.keys(room["users"]);
         if (players[room["playerTurn"]] !== socket.id) {
             socket.emit("gameError", "It is not your turn");
@@ -134,52 +60,22 @@ const Tictactoe = (socket, io) => {
         }
     };
 
-    const sendMessage = (message) => {
-        const room = rooms[socket["roomCode"]];
-        const messageObj = {
-            user: socket["name"],
-            message: message,
-        };
-        room["chatHistory"].push(messageObj);
-        io.to(socket["roomCode"]).emit(
-            "updateChatHistory",
-            room["chatHistory"]
-        );
-    };
-
     const bind = () => {
         // Binds the functions to their corresponding events
-        socket.on("createRoom", createRoom);
-        socket.on("joinRoom", joinRoom);
         socket.on("startGame", startGame);
-        socket.on("leaveRoom", leaveRoom);
         socket.on("playerMove", playerMove);
-        socket.on("disconnect", leaveRoom);
-        socket.on("sendMessage", sendMessage);
+        socket.on("leaveRoom", unbind);
     };
     
     const unbind = () => {
-        // Socket leaves the room
-        socket.leave(socket["roomCode"]);
-        // Removes the roomCode stored in the socket
-        delete socket["roomCode"];
-        
         // Unbinds the functions to their corresponding events
-        socket.off("createRoom", createRoom);
-        socket.off("joinRoom", joinRoom);
         socket.off("startGame", startGame);
-        socket.off("leaveRoom", leaveRoom);
         socket.off("playerMove", playerMove);
-        socket.off("disconnect", leaveRoom);
-        socket.off("sendMessage", sendMessage);
+        socket.off("leaveRoom", unbind);
     };
     
     bind();
     
-};
-
-const generateRoomNumber = () => {
-    return Math.floor(Math.random() * 100);
 };
 
 const checkWin = (grid, row, col) => {

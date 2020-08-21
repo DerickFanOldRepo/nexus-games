@@ -6,14 +6,14 @@ const GameCard = (props) => {
     const [roomNumber, setRoomNumber] = useState();
 
     const createRoom = () => {
-        socket.emit("joinGame", props.gameName);
-        socket.emit("createRoom");
+        // socket.emit("joinGame", props.gameName);
+        socket.emit("createRoom", props.gameName);
     };
 
     const joinRoom = () => {
         if (roomNumber) {
-            socket.emit("joinGame", props.gameName);
-            socket.emit("joinRoom", roomNumber);
+            // socket.emit("joinGame", props.gameName);
+            socket.emit("joinRoom", props.gameName, roomNumber);
         }
         setRoomNumber("");
     };

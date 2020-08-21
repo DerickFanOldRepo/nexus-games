@@ -6,36 +6,43 @@ const Pictionary = (props) => {
 
     const canvasRef = useRef(null);
     const contextRef = useRef(null);
+    const context2Ref = useRef(null);
     const [ isDrawing, setIsDrawing ] = useState();
-
+    
     useEffect(() => {
-
+        
         const canvas = canvasRef.current;
         canvas.width = 400;
         canvas.height = 400;
-
+        
         const context = canvas.getContext("2d");
         context.lineCap = "round";
         context.strokeStyle = "black";
         context.lineWidth = 2;
         contextRef.current = context;
+        
+        const context2 = canvas.getContext("2d");
+        context.lineCap = "round";
+        context.strokeStyle = "black";
+        context.lineWidth = 2;
+        context2Ref.current = context2;
 
     }, []);
     
     useEffect(() => {
-
+        
         socket.on("startDrawing", (offsetX, offsetY) => {
-            contextRef.current.beginPath();
-            contextRef.current.moveTo(offsetX, offsetY);
+            context2Ref.current.beginPath();
+            context2Ref.current.moveTo(offsetX, offsetY);
         });
         
         socket.on("draw", (offsetX, offsetY) => {
-            contextRef.current.lineTo(offsetX, offsetY);
-            contextRef.current.stroke();
+            context2Ref.current.lineTo(offsetX, offsetY);
+            context2Ref.current.stroke();
         });
         
         socket.on("finishDrawing", () => {
-            contextRef.current.closePath();
+            context2Ref.current.closePath();
         });
 
     }, []);
